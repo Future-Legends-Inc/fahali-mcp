@@ -1,0 +1,34 @@
+# Fahali MCP Server
+> Model Context Protocol server for Fahali's autonomous market-risk intelligence. 18 detection engines, 9,200+ instruments, real-time anomaly detection with verified signal→outcome provenance. Informational only — not financial advice.
+
+## Endpoints
+- SSE transport: https://mcp.fahaliai.com/sse
+- Messages endpoint: https://mcp.fahaliai.com/messages?sessionId={sessionId}
+- Health: https://mcp.fahaliai.com/health
+- Landing page: https://mcp.fahaliai.com/
+- llms.txt: https://mcp.fahaliai.com/llms.txt
+
+## Authentication
+Clients must provide a Fahali API key via:
+- Authorization: Bearer <FAHALI_API_KEY> header on SSE handshake, or
+- ?api_key=<FAHALI_API_KEY> query parameter on the SSE URL
+Create a key at https://app.fahaliai.com/developer
+
+## Tools
+- fahali_get_market_verdict — structured verdict per symbol: direction, confidence, reasoning chain, expected move, horizon (free teaser / Professional)
+- fahali_get_portfolio_risk — portfolio risk score, VaR, drawdown, per-position breakdown (Elite)
+- fahali_get_contagion_map — cross-asset contagion graph with tail-dependence edges (Elite)
+- fahali_get_capital_flow — net flow, institutional vs retail, whale activity per symbol (Professional)
+
+## Resources
+- API docs: https://app.fahaliai.com/openapi.json
+- Methodology: https://fahaliai.com/methodology
+- Accuracy: https://fahaliai.com/accuracy
+- Pricing: https://app.fahaliai.com/pricing
+- App: https://app.fahaliai.com
+- Landing: https://fahaliai.com
+- Live constellation: https://app.fahaliai.com/live
+- Insights: https://app.fahaliai.com/insights
+
+## Company
+Future Legends AI — Fahali detects market risk before it becomes loss.
