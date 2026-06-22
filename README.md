@@ -1,9 +1,9 @@
 # Fahali MCP Server
 
-Market-intelligence MCP server that ships **calibrated uncertainty and provenance** with every
-response. Fahali runs 18 detection engines over 9,200+ instruments (crypto, equities, ETFs) in
-real time — dark-pool activity, liquidity anomalies, crash precursors, regime shifts — and every
-detection is scored against realized market outcomes in a verified signal→outcome ledger.
+Market-intelligence MCP server that ships **uncertainty-aware intelligence with provenance** on
+every response. Fahali runs 18 detection engines across ~900 crypto and US equity/ETF instruments
+in real time — dark-pool activity, liquidity anomalies, crash precursors, regime shifts — and
+detections are tracked against realized market outcomes in a signal→outcome ledger.
 
 > **Informational only — not financial advice.** Fahali detects anomalies; it does not tell you
 > or your agent what to buy or sell.
@@ -51,6 +51,34 @@ Claude Desktop config:
   }
 }
 ```
+
+Cursor config (`~/.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "fahali": {
+      "type": "sse",
+      "url": "https://mcp.fahaliai.com/sse?api_key=sk_live_..."
+    }
+  }
+}
+```
+
+Windsurf config: open **Settings → Cascade → MCP**, click **Add custom server**, and paste:
+
+```json
+{
+  "mcpServers": {
+    "fahali": {
+      "type": "sse",
+      "url": "https://mcp.fahaliai.com/sse?api_key=sk_live_..."
+    }
+  }
+}
+```
+
+Or edit Windsurf's MCP config file directly (location varies by OS; use the UI if unsure).
 
 ## Why this server
 
