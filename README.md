@@ -1,8 +1,8 @@
 # Fahali MCP Server
 
 Market-intelligence MCP server that ships **uncertainty-aware intelligence with provenance** on
-every response. Fahali runs 18 detection engines across ~900 crypto and US equity/ETF instruments
-in real time — dark-pool activity, liquidity anomalies, crash precursors, regime shifts — and
+every response. Fahali runs 18 detection engines scanning ~600 instruments in real time, across a 9,200-symbol
+crypto and US equity/ETF universe — dark-pool activity, liquidity anomalies, crash precursors, regime shifts — and
 detections are tracked against realized market outcomes in a signal→outcome ledger.
 
 > **Informational only — not financial advice.** Fahali detects anomalies; it does not tell you
