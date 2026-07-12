@@ -1,95 +1,70 @@
 # Fahali MCP Server
 
-Market-intelligence MCP server that ships **uncertainty-aware intelligence with provenance** on
-every response. Fahali runs 18 detection engines scanning ~600 instruments in real time, across a 9,200-symbol
-crypto and US equity/ETF universe — dark-pool activity, liquidity anomalies, crash precursors, regime shifts — and
-detections are tracked against realized market outcomes in a signal→outcome ledger.
+**Market-risk intelligence your AI agent can call.** Fahali gives agents structured, read-only *judgment* about markets — direction, confidence, reasoning, expected move, contagion, crash precursors — instead of raw prices they have to interpret blindly.
 
-> **Informational only — not financial advice.** Fahali detects anomalies; it does not tell you
-> or your agent what to buy or sell.
+> **Informational only — not financial advice.** Fahali observes and explains risk. It never tells you or your agent what to buy or sell. No order routing, no path to capital.
 
-## Tools
+## What makes it different
 
-| Tool | What it returns | Minimum tier |
-|------|-----------------|--------------|
-| `fahali_get_market_verdict` | Structured market verdict per symbol: direction, confidence, reasoning chain, expected move, horizon | Free key (teaser) / Professional |
-| `fahali_get_portfolio_risk` | Portfolio risk assessment: risk score, VaR, drawdown, per-position breakdown | Elite |
-| `fahali_get_contagion_map` | Cross-asset contagion map: nodes, pairwise tail-dependence edges, correlated clusters | Elite |
-| `fahali_get_capital_flow` | Capital-flow intelligence per symbol: net flow, institutional vs retail, whale activity | Professional |
+Most market APIs hand an LLM data exhaust and hope it reasons well. Fahali hands it a **verdict with a receipt**:
 
-## Connect (remote SSE)
+- **18 detection engines** scan **~840 instruments per cycle** across a **2,000+ instrument universe** — crypto 24/7 and US equities/ETFs during market hours. Anomaly, capital flow, market regime, dark-pool proxy, whale activity, funding stress, liquidation cascade, tail-dependence/contagion, and 72-hour crash-precursor forecasting.
+- **An adaptive ensemble** re-weights those 18 engines every 15 minutes based on which ones have been *right lately*, per market regime.
+- **Every served claim is judged against realized outcomes** and gets a **permanent, public replay URL** — hits *and* misses. The full grading methodology is published at [fahaliai.com/methodology](https://fahaliai.com/methodology). Engines without enough resolved outcomes report `calibrating` — never an invented number.
+
+That last point is the whole thesis: an agent (or the human behind it) can audit any Fahali claim against what the market actually did. Example receipts, misses included, live at [app.fahaliai.com](https://app.fahaliai.com).
+
+## Connect
+
+**Remote MCP** (recommended — nothing to install):
 
 ```
-SSE endpoint:  https://mcp.fahaliai.com/sse
-Auth:          Authorization: Bearer <your sk_live_ key>
-               (or append ?api_key=<key> to the SSE URL if your client can't set headers)
+Streamable HTTP:  https://mcp.fahaliai.com/mcp
+SSE (legacy):     https://mcp.fahaliai.com/sse
 ```
 
-**Bring your own API key.** Create one free in the Fahali app:
-[app.fahaliai.com/developer](https://app.fahaliai.com/developer) (sign in → Developer / API).
+Auth: **OAuth 2.1** ("Connect with Fahali") or a static key — `Authorization: Bearer sk_live_...`. Grab a **free developer key (50 calls/day)** at [app.fahaliai.com/developer](https://app.fahaliai.com/developer).
 
-- **Free developer key** — `fahali_get_market_verdict` only, reduced depth, 50 calls/day.
-- **Full key** (Professional tier and above) — all tools at your subscription tier.
+**Claude / ChatGPT / Cursor:** add the remote MCP URL above as a connector. Listed in the official MCP registry as `com.fahaliai/fahali`.
 
-## Local / stdio
+**SDKs** for building agents directly:
 
 ```bash
-npm install && npm run build
-FAHALI_API_KEY=sk_live_... node dist/index.js --stdio
+npm install fahali      # TypeScript — OpenAI tools format + Vercel AI SDK / LangChain adapters
+pip install fahali      # Python — LangChain / CrewAI / LlamaIndex adapters
 ```
 
-Claude Desktop config:
+## Tools (25)
 
-```json
-{
-  "mcpServers": {
-    "fahali": {
-      "command": "node",
-      "args": ["/path/to/mcp-server/dist/index.js", "--stdio"],
-      "env": { "FAHALI_API_KEY": "sk_live_..." }
-    }
-  }
-}
-```
+Market-intelligence tools are **strictly read-only**. A few optional agent-memory and custom-alert tools write only to your own agent workspace, never to markets.
 
-Cursor config (`~/.cursor/mcp.json`):
+| Tool | Returns |
+|------|---------|
+| `fahali_get_market_verdict` | Per-symbol verdict: direction, confidence, reasoning chain, expected move, horizon |
+| `fahali_get_72h_forecast` | Probabilistic 72h forecast: crash/neutral/pump probabilities, expected return, uncertainty cone |
+| `fahali_get_portfolio_risk` | Portfolio risk: score, VaR, drawdown, per-position breakdown |
+| `fahali_get_flash_crash_risk` | Flash-crash precursor signals |
+| `fahali_get_whale_activity` | Large-order / whale flow |
+| `fahali_get_dark_pool_activity` | Off-tape absorption (proxy) |
+| `fahali_get_contagion_map` | Cross-asset tail-dependence / correlated clusters |
+| `fahali_get_capital_flow` | Net flow, institutional vs retail, per symbol |
+| `fahali_get_market_regime` | Current regime read (HMM-based) |
+| `fahali_get_track_record_scorecard` | The judged record with per-horizon base rates |
+| `fahali_run_shock_test` | Stress-test a portfolio against a scenario |
+| … | 14 more — market snapshot, sentiment, correlation matrix, case studies, engine status, briefing, and agent-workspace tools |
 
-```json
-{
-  "mcpServers": {
-    "fahali": {
-      "type": "sse",
-      "url": "https://mcp.fahaliai.com/sse?api_key=sk_live_..."
-    }
-  }
-}
-```
+Full tool schemas: [mcp.fahaliai.com](https://mcp.fahaliai.com/).
 
-Windsurf config: open **Settings → Cascade → MCP**, click **Add custom server**, and paste:
+## Pricing
 
-```json
-{
-  "mcpServers": {
-    "fahali": {
-      "type": "sse",
-      "url": "https://mcp.fahaliai.com/sse?api_key=sk_live_..."
-    }
-  }
-}
-```
+Free developer key (50 calls/day) for exploration. Agent lanes from $49/mo (10k calls) → $199 (100k) → $999 (1M). Human app tiers from $19/mo at [fahaliai.com](https://fahaliai.com).
 
-Or edit Windsurf's MCP config file directly (location varies by OS; use the UI if unsure).
+## Links
 
-## Why this server
+- App: [app.fahaliai.com](https://app.fahaliai.com)
+- MCP docs / health: [mcp.fahaliai.com](https://mcp.fahaliai.com/)
+- Methodology (how signals are graded): [fahaliai.com/methodology](https://fahaliai.com/methodology)
+- Developer / API: [fahaliai.com/developer](https://fahaliai.com/developer)
+- Privacy: [app.fahaliai.com/privacy](https://app.fahaliai.com/privacy)
 
-Most market-data MCP servers proxy raw prices. Fahali returns **judged intelligence**: each
-verdict carries a confidence score, the reasoning chain that produced it, and provenance you can
-audit. Detection accuracy is measured continuously against realized outcomes — engines that
-haven't earned a number report "calibrating", never an invented one.
-
-- API reference: https://app.fahaliai.com/openapi.json
-- Methodology: https://fahaliai.com/methodology
-- Pricing: https://app.fahaliai.com/pricing
-
-*Multi-tenant: each SSE connection is isolated with its own key; keys are never shared across
-sessions. Informational only, not financial advice.*
+Built by [Future Legends AI](https://fahaliai.com). Observation, not advice.
