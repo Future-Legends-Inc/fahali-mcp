@@ -67,4 +67,4 @@ Free developer key (50 calls/day) for exploration. Agent lanes from $49/mo (10k 
 - Developer / API: [fahaliai.com/developer](https://fahaliai.com/developer)
 - Privacy: [app.fahaliai.com/privacy](https://app.fahaliai.com/privacy)
 
-Built by [Future Legends AI](https://fahaliai.com). Observation, not advice.
+Built by [Future Legends Inc](https://fahaliai.com). Observation, not advice.
