@@ -1,5 +1,11 @@
 # Fahali MCP Server
 
+[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Launching%20Jul%2014-FF6154?logo=producthunt&logoColor=white)](https://www.producthunt.com/posts/fahali)
+[![npm](https://img.shields.io/npm/v/fahali?label=npm&color=cb3837&logo=npm)](https://www.npmjs.com/package/fahali)
+[![PyPI](https://img.shields.io/pypi/v/fahali?label=pypi&color=3775A9&logo=pypi&logoColor=white)](https://pypi.org/project/fahali/)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-com.fahaliai%2Ffahali-C9A961)](https://registry.modelcontextprotocol.io/v0/servers?search=fahali)
+[![Methodology](https://img.shields.io/badge/judged%20publicly-misses%20included-0B0A09)](https://fahaliai.com/methodology)
+
 **Market-risk intelligence your AI agent can call.** Fahali gives agents structured, read-only *judgment* about markets — direction, confidence, reasoning, expected move, contagion, crash precursors — instead of raw prices they have to interpret blindly.
 
 > **Informational only — not financial advice.** Fahali observes and explains risk. It never tells you or your agent what to buy or sell. No order routing, no path to capital.
