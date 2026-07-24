@@ -42,7 +42,7 @@ import { PROCESS_KEY, extractKeyFromHandshake, MISSING_KEY_ERROR } from "./auth.
 
 const SERVER_INFO = {
   name: "fahali-mcp",
-  version: "1.3.0",
+  version: "1.5.3",
 };
 
 /**
