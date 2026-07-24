@@ -10,10 +10,34 @@
     "type": "git",
     "url": "https://github.com/Future-Legends-Inc/fahali-mcp.git"
   },
-  "keywords": ["mcp", "model-context-protocol", "market-intelligence", "fahali", "fintech", "risk", "anomaly-detection"],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "financial-risk",
+    "portfolio-risk",
+    "market-risk",
+    "crypto-risk",
+    "risk-management",
+    "financial-ai",
+    "ai-agents",
+    "trading-agents",
+    "portfolio-stress-testing",
+    "contagion-risk",
+    "market-intelligence",
+    "fahali",
+    "fintech",
+    "anomaly-detection"
+  ],
   "author": "Future Legends AI",
-  "files": ["dist", "README.md", "server.json"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "dist",
+    "README.md",
+    "server.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",

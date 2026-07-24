@@ -1,9 +1,9 @@
-# Fahali MCP Server
+# Fahali — Financial Risk MCP Server for AI Agents
 
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-com.fahaliai%2Ffahali-C9A961)](https://registry.modelcontextprotocol.io/v0/servers?search=fahali)
 [![Methodology](https://img.shields.io/badge/judged%20publicly-misses%20included-0B0A09)](https://fahaliai.com/methodology)
 
-**Give your agent a risk conscience.** Fahali is a read-only market-risk layer for AI agents. It returns a judged read with its confidence, the inputs it is missing, and a signed receipt, so your agent can check its own conviction against something scored against outcomes instead of raw prices it has to interpret blindly.
+**Give your agent a risk conscience.** Fahali gives AI agents a callable financial-risk layer: portfolio risk, stress losses, crypto risk, contagion, crash precursors and market verdicts. Read-only — your agent already fetches prices; Fahali tells it what those prices mean for capital at risk. It returns a judged read with its confidence, the inputs it is missing, and a signed receipt, so your agent can check its own conviction against something scored against outcomes instead of raw prices it has to interpret blindly.
 
 > **Observation, not advice.** Fahali watches and explains market risk. It never tells you or your agent what to buy or sell. Read-only: no order routing, no path to capital.
 
