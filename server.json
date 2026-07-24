@@ -1,14 +1,18 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.fahaliai/fahali",
-  "description": "Market intelligence MCP: 18 engines, calibrated uncertainty, outcome-verified. Not financial advice",
-  "version": "1.3.0",
+  "description": "Market-risk intelligence for AI agents: verified lead time before drawdowns, signed receipts, a public judged track record. Observation, not advice.",
+  "version": "1.5.3",
   "websiteUrl": "https://app.fahaliai.com",
   "repository": {
-    "url": "https://github.com/BobMain-2025/fahali-mcp",
+    "url": "https://github.com/Future-Legends-Inc/fahali-mcp",
     "source": "github"
   },
   "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.fahaliai.com/mcp"
+    },
     {
       "type": "sse",
       "url": "https://mcp.fahaliai.com/sse"

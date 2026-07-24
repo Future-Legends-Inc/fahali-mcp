@@ -1,0 +1,13 @@
+{
+  "name": "fahali-pre-trade-check",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A risk conscience for a trading agent, wired to the Fahali MCP / read API.",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env agent.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

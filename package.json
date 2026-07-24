@@ -1,14 +1,14 @@
 {
   "name": "fahali-mcp",
-  "version": "1.3.0",
-  "description": "Fahali MCP server — read-only market-intelligence tools (market verdict, portfolio risk, contagion map, capital flow) over Model Context Protocol. Informational only, not financial advice.",
+  "version": "1.5.3",
+  "description": "Fahali MCP server: read-only market-risk intelligence for AI agents (verified lead time, signed receipts, judged track record) over the Model Context Protocol. Observation, not financial advice.",
   "type": "module",
   "main": "dist/index.js",
   "license": "MIT",
   "homepage": "https://app.fahaliai.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BobMain-2025/fahali-mcp.git"
+    "url": "https://github.com/Future-Legends-Inc/fahali-mcp.git"
   },
   "keywords": ["mcp", "model-context-protocol", "market-intelligence", "fahali", "fintech", "risk", "anomaly-detection"],
   "author": "Future Legends AI",
