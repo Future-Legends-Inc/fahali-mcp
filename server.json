@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.fahaliai/fahali",
-  "description": "Market-risk intelligence for AI agents: verified lead time before drawdowns, signed receipts, a public judged track record. Observation, not advice.",
+  "description": "Market-risk for AI agents: verified lead time, signed receipts, judged record. Not advice.",
   "version": "1.5.3",
   "websiteUrl": "https://app.fahaliai.com",
   "repository": {
