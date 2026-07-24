@@ -11,7 +11,7 @@
 
 - **Verified lead time.** Per engine, the median hours ahead of the move on its correct material warnings, scored against what happened, with the misses in the same record. Your agent can weight a signal by proven lead, not by tone. Public, no key: `GET /api/track-record/lead-time`.
 - **Signed receipts.** Every verdict carries a SHA-256 receipt and a provenance root. When your agent quotes Fahali, it can attach proof of what was said and when.
-- **A judged record with public replays.** Every signal is scored against a disclosed, versioned method at its own horizon. Wrong calls stay on the record. Methodology: [fahaliai.com/methodology](https://fahaliai.com/methodology).
+- **A judged record with public replays.** Predictive signals are graded against a disclosed, versioned method at their own horizon, and wrong calls stay on the record. Analytical engines are labelled observation-only rather than scored as forecasts, because grading an observation against a price move would manufacture a hit rate that means nothing. Methodology: [fahaliai.com/methodology](https://fahaliai.com/methodology).
 - **Honest absence.** Missing data says so. Quiet markets resolve as unresolved, never as wins. Some tools abstain by design: whale tracking returns an explicit "no on-chain data source" rather than inventing positions.
 
 Coverage is crypto 24/7 and US equities and ETFs during market hours. Live coverage and engine counts are reported at `GET /api/public/stats` rather than asserted here, because the active set changes.
