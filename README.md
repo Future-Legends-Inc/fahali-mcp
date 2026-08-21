@@ -57,11 +57,11 @@ Around 30 tools. Most are read-only market intelligence; a few agent-workspace t
 |------|---------|
 | `fahali_get_market_verdict` | Per-symbol verdict: direction, confidence, reasoning, expected move, horizon |
 | `fahali_get_lead_time` | The verified, outcome-scored lead-time record (public) |
-| `fahali_get_72h_forecast` | Probabilistic 72h forecast with an uncertainty cone, Brier-scored |
+| `fahali_get_forecast` | Probabilistic forecast over the signal's own registered horizon (6-72h), with an uncertainty cone, Brier-scored |
 | `fahali_get_flash_crash_risk` | Flash-crash precursor strength, or an explicit abstention |
 | `fahali_get_track_record_scorecard` | The judged record with per-horizon base rates and lift |
 | `fahali_get_contagion_map` | Cross-asset tail-dependence and correlated clusters |
-| `fahali_get_dark_pool_activity` | Off-tape absorption, labeled as a microstructure proxy |
+| `fahali_get_microstructure_proxy` | Absorption inferred from public microstructure only - we do not see off-exchange prints |
 | `fahali_get_capital_flow` | Order-flow imbalance proxy (no fabricated institutional/retail split) |
 | `fahali_get_market_regime` | Current regime read |
 | `fahali_run_shock_test` | Stress-test a portfolio against a scenario |
