@@ -49,6 +49,19 @@ It forwards each tool call to the upstream Fahali API; tier is enforced upstream
 
 [`examples/pre-trade-check`](examples/pre-trade-check) is a runnable agent (zero dependencies, one command) that asks Fahali, before a position is opened: is a flash-crash precursor firing, what is the judged read and what data is missing, and how early does the record say this engine usually warns. It then prints a `PROCEED` / `CAUTION` / `HOLD` posture and the receipt.
 
+## Starter agents (5 minutes)
+
+[fahali-agent-templates](https://github.com/Future-Legends-Inc/fahali-agent-templates) has three runnable agents on this server:
+
+- **portfolio-guardian**: which holding carries more tail risk than its size, and which holdings are really one bet (`fahali_analyze_custom_portfolio`).
+- **shock-tester**: what a 20% BTC or 8% Nasdaq drop does to a book, in dollars (`fahali_run_shock_test`).
+- **contagion-explainer**: which assets fall together now, with measured lead/lag (`fahali_get_contagion_map`).
+
+```bash
+git clone https://github.com/Future-Legends-Inc/fahali-agent-templates
+cd fahali-agent-templates && npm install && npm run guardian
+```
+
 ## Tools
 
 The hosted server at mcp.fahaliai.com exposes more than 50 tools (the local stdio proxy in this repo carries a subset). Most are read-only market intelligence; a few agent-workspace tools (memory, custom alerts) write only to your own workspace, never to markets. Highlights:
