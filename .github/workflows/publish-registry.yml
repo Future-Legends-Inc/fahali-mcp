@@ -45,4 +45,12 @@ jobs:
             echo "HTTP failed, falling back to DNS authentication..."
             ./mcp-publisher login dns --domain fahaliai.com --private-key "$KEY"
           fi
-          ./mcp-publisher publish
+          echo "Publishing to MCP registry..."
+          OUTPUT=$(./mcp-publisher publish 2>&1) && echo "$OUTPUT" || {
+            if echo "$OUTPUT" | grep -qi "already exists"; then
+              echo "Server version already published to registry: OK"
+            else
+              echo "$OUTPUT"
+              exit 1
+            fi
+          }
