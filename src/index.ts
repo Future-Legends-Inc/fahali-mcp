@@ -37,6 +37,7 @@ import {
   getPortfolioRisk,
   getContagionMap,
   getCapitalFlow,
+  proxyTool,
 } from "./proxy.js";
 import { PROCESS_KEY, extractKeyFromHandshake, MISSING_KEY_ERROR } from "./auth.js";
 
@@ -92,11 +93,17 @@ function buildServer(apiKey: string | undefined): Server {
         }
         return getCapitalFlow(apiKey, symbol);
       }
-      default:
+      default: {
+        const def = TOOL_DEFINITIONS.find((t) => t.name === name) as any;
+        const meta = def?._meta as { endpoint?: string; method?: string } | undefined;
+        if (meta?.endpoint) {
+          return proxyTool(apiKey, meta.endpoint, meta.method || "GET", args as Record<string, unknown> | undefined);
+        }
         return {
           content: [{ type: "text", text: JSON.stringify({ error: `unknown tool: ${name}` }) }],
           isError: true,
         };
+      }
     }
   });
 

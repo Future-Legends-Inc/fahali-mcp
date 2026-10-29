@@ -132,3 +132,58 @@ export async function getContagionMap(apiKey: string | undefined): Promise<CallT
 export async function getCapitalFlow(apiKey: string | undefined, symbol: string): Promise<CallToolResult> {
   return proxyGet(apiKey, "/agent/capital-flow", { symbol });
 }
+
+/**
+ * Generic dispatcher for tools declared in TOOL_DEFINITIONS with
+ * _meta.endpoint. GET sends arguments as query parameters; POST sends them
+ * as a JSON body. Used for every tool that has no bespoke handler.
+ */
+export async function proxyTool(
+  apiKey: string | undefined,
+  endpoint: string,
+  method: string,
+  args: Record<string, unknown> | undefined,
+): Promise<CallToolResult> {
+  if (method.toUpperCase() !== "POST") {
+    const params: Record<string, string> = {};
+    for (const [k, v] of Object.entries(args || {})) {
+      if (v === undefined || v === null || v === "") continue;
+      params[k] = Array.isArray(v)
+        ? v.join(",")
+        : typeof v === "object"
+          ? JSON.stringify(v)
+          : String(v);
+    }
+    return proxyGet(apiKey, endpoint, params);
+  }
+
+  const url = new URL(endpoint, API_BASE);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const res = await fetch(url.toString(), {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...authHeaders(apiKey),
+      },
+      body: JSON.stringify(args || {}),
+    });
+    let body: any;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    if (res.ok) return okResult(body);
+    if (res.status === 401 || res.status === 403) return authFailureResult(res.status, body);
+    return errorResult(body?.error || `HTTP ${res.status}: ${res.statusText}`, res.status);
+  } catch (err: any) {
+    if (err.name === "AbortError") return errorResult(`Request timed out after ${REQUEST_TIMEOUT_MS}ms`);
+    return errorResult(`Proxy error: ${err.message}`);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
