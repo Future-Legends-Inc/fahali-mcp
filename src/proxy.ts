@@ -11,7 +11,7 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { authHeaders } from "./auth.js";
 
-const API_BASE = process.env.FAHALI_API_URL || process.env.SPECTRA_API_URL || "http://localhost:5000";
+const API_BASE = process.env.FAHALI_API_URL || process.env.SPECTRA_API_URL || "https://app.fahaliai.com";
 const REQUEST_TIMEOUT_MS = 15_000;
 
 function okResult(data: unknown): CallToolResult {

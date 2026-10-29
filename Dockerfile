@@ -1,5 +1,5 @@
-# Built by Railway with rootDirectory="mcp-server", so the build context IS this
-# directory — COPY paths are context-relative.
+# Build context is this directory. Default CMD serves SSE on PORT (3001);
+# run "node dist/index.js --stdio" for stdio. API base defaults to https://app.fahaliai.com.
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
