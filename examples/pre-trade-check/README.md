@@ -9,7 +9,7 @@ three things and folds the answer into the decision:
 2. What is the judged read, how confident is it, and what data is missing?
 3. How early does Fahali's own record say its engines usually warn?
 
-It then prints a risk posture (`PROCEED` / `CAUTION` / `HOLD`) and the signed
+It then prints a risk posture (`PROCEED` / `CAUTION` / `HOLD`) and the
 receipt, so the decision is auditable later. Fahali is observation, not advice:
 this check informs your agent, it does not trade for you.
 
@@ -51,8 +51,9 @@ too, so you can see precisely what your agent would consume.
 - **Verified lead time.** `/api/track-record/lead-time` returns a per-engine
   record scored against what the market actually did, misses included. Your
   agent can weight a signal by proven lead, not by tone.
-- **Signed receipts.** Every verdict carries a SHA-256 receipt and a provenance
-  root. Your agent can attach proof of what was said and when.
+- **Verifiable receipts.** Every verdict carries a SHA-256 integrity hash and a
+  provenance root, so a modified receipt can be detected. Your agent can attach
+  evidence of what was said and when.
 - **Honest absence.** When Fahali cannot tell, it abstains and says so. Silence
   is never scored as a win.
 

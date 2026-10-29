@@ -1,22 +1,10 @@
 name: Publish to MCP Registry
 
 # Publishes server.json to the official MCP registry as com.fahaliai/fahali.
-# The signing key lives only in GitHub Actions Secrets (encrypted, never in
-# chat or source). Rotate it any time from the repo settings.
-#
-# ONE-TIME SETUP:
-#   1. The registry namespace com.fahaliai is verified by the DNS TXT on
-#      fahaliai.com apex: `v=MCPv1; k=ed25519; p=<base64-public-key>`.
-#   2. Put the matching ed25519 PRIVATE key (hex) in:
-#        repo -> Settings -> Secrets and variables -> Actions -> New secret
-#        Name: MCP_DNS_KEY
-#      It MUST match the public key currently in the DNS TXT record. If the key
-#      was lost, generate a new pair, update the DNS TXT to the new public key,
-#      wait for propagation, then store the new private key here.
-#
-# THEN publish by cutting a GitHub Release (or run this workflow manually).
-# Bump server.json + package.json version first (the registry rejects
-# re-publishing an existing version).
+# Domain verification for fahaliai.com is active via:
+#   1. HTTP: https://fahaliai.com/.well-known/mcp-registry-auth
+#   2. DNS TXT: v=MCPv1; k=ed25519; p=...
+# Authentication keys are stored in GitHub Secrets (MCP_REGISTRY_KEY / MCP_DNS_KEY).
 
 on:
   release:
@@ -40,13 +28,21 @@ jobs:
       - name: Validate server.json
         run: ./mcp-publisher validate
 
-      - name: Login (DNS) and publish
+      - name: Login and publish
         env:
           MCP_DNS_KEY: ${{ secrets.MCP_DNS_KEY }}
+          MCP_REGISTRY_KEY: ${{ secrets.MCP_REGISTRY_KEY }}
         run: |
-          if [ -z "$MCP_DNS_KEY" ]; then
-            echo "::error::MCP_DNS_KEY secret is not set. See the setup notes at the top of this workflow."
+          KEY="${MCP_REGISTRY_KEY:-$MCP_DNS_KEY}"
+          if [ -z "$KEY" ]; then
+            echo "::error::Neither MCP_REGISTRY_KEY nor MCP_DNS_KEY secret is set."
             exit 1
           fi
-          ./mcp-publisher login dns --domain fahaliai.com --private-key "$MCP_DNS_KEY"
+          echo "Authenticating via HTTP domain verification on fahaliai.com..."
+          if ./mcp-publisher login http --domain fahaliai.com --private-key "$KEY"; then
+            echo "HTTP domain authentication succeeded."
+          else
+            echo "HTTP failed, falling back to DNS authentication..."
+            ./mcp-publisher login dns --domain fahaliai.com --private-key "$KEY"
+          fi
           ./mcp-publisher publish

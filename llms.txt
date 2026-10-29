@@ -1,34 +1,96 @@
 # Fahali MCP Server
-> Model Context Protocol server for Fahali's autonomous market-risk intelligence. 18 detection engines, 9,200+ instruments, real-time anomaly detection with verified signal→outcome provenance. Informational only — not financial advice.
+> Model Context Protocol server for Fahali's autonomous market-risk intelligence. An ensemble of independent detection engines scanning ~2,000 live markets (crypto + US equities/ETFs), real-time anomaly detection with verified signal→outcome provenance. The live roster and each engine's judged record are published at https://app.fahaliai.com/api/track-record/engines — the edge is in the composition, not the count. Informational only — not financial advice.
 
 ## Endpoints
-- SSE transport: https://mcp.fahaliai.com/sse
-- Messages endpoint: https://mcp.fahaliai.com/messages?sessionId={sessionId}
-- Health: https://mcp.fahaliai.com/health
-- Landing page: https://mcp.fahaliai.com/
-- llms.txt: https://mcp.fahaliai.com/llms.txt
+- [SSE transport](https://mcp.fahaliai.com/sse)
+- [Messages endpoint](https://mcp.fahaliai.com/messages?sessionId={sessionId})
+- [Health](https://mcp.fahaliai.com/health)
+- [Landing page](https://mcp.fahaliai.com/)
+- [llms.txt](https://mcp.fahaliai.com/llms.txt)
 
 ## Authentication
-Clients must provide a Fahali API key via:
-- Authorization: Bearer <FAHALI_API_KEY> header on SSE handshake, or
-- ?api_key=<FAHALI_API_KEY> query parameter on the SSE URL
+Clients should use OAuth or provide a Fahali API key in the `Authorization: Bearer <FAHALI_API_KEY>` header. The legacy query-string key remains compatible for installed clients but should not be used in new integrations because URLs are commonly logged.
 Create a key at https://app.fahaliai.com/developer
 
 ## Tools
-- fahali_get_market_verdict — structured verdict per symbol: direction, confidence, reasoning chain, expected move, horizon (free teaser / Professional)
-- fahali_get_portfolio_risk — portfolio risk score, VaR, drawdown, per-position breakdown (Elite)
-- fahali_get_contagion_map — cross-asset contagion graph with tail-dependence edges (Elite)
-- fahali_get_capital_flow — net flow, institutional vs retail, whale activity per symbol (Professional)
+The live catalogue is returned by `fahali_get_capabilities` and MCP `tools/list`; no static count is authoritative.
+
+### Markets & verdict
+- fahali_get_market_decision — primary market judgment: what changed, why it matters, horizon, evidence, conflicts, justified action and invalidation conditions (Professional; Free developer-key depth available)
+- fahali_get_symbol_decision — the same canonical judgment contract bound to exactly one requested instrument (Professional; Free developer-key depth available)
+- fahali_get_market_verdict — compatibility name for the canonical decision path (Professional)
+- fahali_get_market_snapshot — live prices, changes, asset class for all instruments (Free)
+- fahali_get_market_regime — HMM 4-regime detection (Professional)
+- fahali_get_market_mood — how fearful or greedy prices are, US stocks and crypto, each measure ranked against its own past; a description, not a forecast (Free)
+- fahali_get_sector_rotation — which sectors, coins and markets are leading or fading against their benchmark; relative price performance, not money flow (Free)
+- fahali_get_market_sentiment — sentiment history with score and direction (Free)
+- fahali_get_highest_conviction_signals — priority risk clusters; risk conviction and directional conviction are reported separately, and stress conviction is never presented as a trade direction (Free)
+- fahali_daily_brief — yesterday vs today market intelligence diff (Free teaser / Professional)
+
+### Risk & crash
+- fahali_get_market_risk_score — global 0-100 market-risk context from the canonical detection snapshot; not participant or portfolio risk (Professional)
+- fahali_get_flash_crash_risk — uncalibrated early-warning strength, observed triggers and risk flags; calibrated crash probability, timing and action are withheld unless a matching model exists (Professional)
+- fahali_get_portfolio_risk — VaR, drawdown, per-position breakdown from connected accounts (Elite)
+- fahali_analyze_custom_portfolio — stateless risk, canonical direction reconciliation and covariance coverage for a supplied book; binding action withheld (Elite)
+- fahali_run_shock_test — natural-language stress test with capital at risk (Free)
+
+### Detection activity & flow proxies
+- fahali_get_detection_activity — per-symbol detection counts and bullish-versus-bearish alert-type balance; alert activity, not executed trade flow (Professional)
+- fahali_get_unusual_money_movement — participant-agnostic, candle-derived buy-versus-sell volume imbalance with conflicts and freshness explicit (Professional)
+- fahali_get_microstructure_proxy — absorption observations derived from public aggregate trades and order-book snapshots, with source and limitations explicit (Professional)
+- fahali_get_capital_flow — measured 60-minute USD buy-vs-sell imbalance for requested symbols, or the strongest available readings; candle-derived proxy, and zero detector score does not mean no data (Professional)
+- fahali_get_forecast — crash/pump/neutral probabilities with a p10/p50/p90 uncertainty cone over the registered horizon (Professional)
+- fahali_get_lead_time — per engine: measured hours of warning ahead of correct calls, misses included. Quote `headline` for a single claim: it is selected server-side by recall among strata clearing the publication floor with positive base-rate lift. Do not cherry-pick a row. If no headline is publishable, report `headlineWithheldReason`. Always name its instrument class and horizon (Free)
+- fahali_get_market_briefing — full executive market analysis for today; PARTIAL when subsystems disagree (Professional)
+
+### Contagion & correlation
+- fahali_get_contagion_map — contagion graph with tail-dependence edges (Elite)
+- fahali_get_correlation_matrix — requested-book Pearson matrix from the canonical 45-day covariance artifact, with pair observations and coverage (Free)
+
+### Portfolio & alerts
+- fahali_get_portfolio_metrics — sentiment momentum, cascade risk, liquidity stress (Professional)
+- fahali_get_realtime_alerts — unified detection feed from the active fleet (Professional)
+
+### Persistent monitoring, history & delivery
+- fahali_watch_portfolio — persist supplied positions or connected accounts together with objective, horizon, drawdown tolerance, position limit and permitted actions; evaluates immediately and in the background (Elite)
+- fahali_list_portfolio_watches — resume existing watches instead of recreating them (Elite)
+- fahali_update_portfolio_watch — change positions, mandate, thresholds, cadence or active state and immediately re-evaluate (Elite)
+- fahali_get_portfolio_decision — current HOLD/WATCH/REDUCE/EXIT judgment with what happened, why, when, what now and what invalidates it (Elite)
+- fahali_get_watch_delta — exact decision and evidence changes since the prior immutable verdict (Elite)
+- fahali_get_verdict_history — cursor, symbol, since and as_of queries over immutable watch judgments (Elite)
+- fahali_get_verdict_by_id — permanent replay of one judgment and its integrity hashes (Elite)
+- fahali_subscribe_risk — signed webhook/agent callback, Slack, Teams, account-email or registered-device delivery (Elite)
+- fahali_list_risk_subscriptions — channel health and filters without secrets or full targets (Elite)
+- fahali_update_subscription — pause, resume, filter or rotate a target (Elite)
+- fahali_unsubscribe_risk — stop delivery while retaining the audit record (Elite)
+
+Persistent delivery is outbox-backed, deduplicated and retried. A failed channel is recorded as failed; it is never described as sent. Webhook targets are public HTTPS only, configuration is encrypted, redirects are refused and generic callbacks are signed with HMAC-SHA256.
+
+### Proof & system
+- fahali_get_track_record_scorecard — honest 4-axis accuracy with base-rate lift (Professional)
+- fahali_get_case_studies — 40 verified signal→outcome cases (Professional)
+- fahali_get_engine_status — liveness report for the active detection fleet (Free)
+- fahali_get_visual_intelligence — unified constellation graph of the active fleet (Free)
+
+### Agent workflow & private state
+- fahali_get_bundle — one-call composite of selected market and portfolio views with shared context deduplicated (Professional)
+- fahali_get_capabilities — canonical executable tool inventory, tiers, response controls and resources (Free)
+- fahali_list_connected_accounts — safe account enumeration before portfolio analysis (Professional)
+- fahali_fact_check_narrative — verify each assertion before an agent repeats it (Professional)
+- fahali_save_memory — save private agent context with a namespaced key (Free)
+- fahali_search_memories — query private saved agent context (Free)
+- fahali_create_alert — create an idempotent agent-authored alert (Elite)
+- fahali_list_agent_sessions — enumerate the caller's private agent sessions (Free)
 
 ## Resources
-- API docs: https://app.fahaliai.com/openapi.json
-- Methodology: https://fahaliai.com/methodology
-- Accuracy: https://fahaliai.com/accuracy
-- Pricing: https://app.fahaliai.com/pricing
-- App: https://app.fahaliai.com
-- Landing: https://fahaliai.com
-- Live constellation: https://app.fahaliai.com/live
-- Insights: https://app.fahaliai.com/insights
+- [API docs](https://app.fahaliai.com/openapi.json)
+- [Methodology](https://fahaliai.com/methodology)
+- [Accuracy](https://fahaliai.com/accuracy)
+- [Pricing](https://app.fahaliai.com/pricing)
+- [App](https://app.fahaliai.com)
+- [Landing](https://fahaliai.com)
+- [Live constellation](https://app.fahaliai.com/live)
+- [Insights](https://app.fahaliai.com/insights)
 
 ## Company
-Future Legends AI — Fahali detects market risk before it becomes loss.
+Future Legends Inc — Fahali measures how much warning arrived before an adverse market move, and publishes the record it is scored against, including the misses. Read-only: it observes and scores, it routes no orders. Observation, not investment advice.

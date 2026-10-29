@@ -1,56 +1,53 @@
 {
   "name": "fahali-mcp",
-  "version": "1.5.3",
-  "description": "Fahali MCP server: read-only market-risk intelligence for AI agents (verified lead time, signed receipts, judged track record) over the Model Context Protocol. Observation, not financial advice.",
+  "version": "1.28.1",
+  "description": "Fahali MCP server \u2014 capital-read-only market intelligence with durable watches, mandate-aware decisions, immutable history, and user-authorized delivery. Fahali places no orders.",
   "type": "module",
   "main": "dist/index.js",
   "license": "MIT",
   "homepage": "https://app.fahaliai.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Future-Legends-Inc/fahali-mcp.git"
+    "url": "https://github.com/BobMain-2025/fahali-mcp.git"
   },
   "keywords": [
     "mcp",
-    "mcp-server",
     "model-context-protocol",
-    "financial-risk",
-    "portfolio-risk",
-    "market-risk",
-    "crypto-risk",
-    "risk-management",
-    "financial-ai",
-    "ai-agents",
-    "trading-agents",
-    "portfolio-stress-testing",
-    "contagion-risk",
     "market-intelligence",
     "fahali",
     "fintech",
+    "risk",
     "anomaly-detection"
   ],
-  "author": "Future Legends AI",
-  "files": [
-    "dist",
-    "README.md",
-    "server.json"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
+  "author": "Future Legends Inc",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run check-dispatch && tsc",
+    "build:image": "tsc",
     "start": "node dist/index.js",
     "dev": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
-    "prepublishOnly": "npm run build"
+    "check-dispatch": "node scripts/check-dispatch.mjs",
+    "validate-schemas": "node scripts/validate-schemas.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "pg": "^8.13.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
     "typescript": "^5.7.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "server.json",
+    "llms.txt"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

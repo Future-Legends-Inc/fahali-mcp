@@ -1,11 +1,11 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.fahaliai/fahali",
-  "description": "Market-risk for AI agents: verified lead time, signed receipts, judged record. Not advice.",
-  "version": "1.5.3",
+  "description": "Market-risk for AI agents: verified lead time, SHA-256-hashed receipts, judged record. Not advice.",
+  "version": "1.28.1",
   "websiteUrl": "https://app.fahaliai.com",
   "repository": {
-    "url": "https://github.com/Future-Legends-Inc/fahali-mcp",
+    "url": "https://github.com/BobMain-2025/fahali-mcp",
     "source": "github"
   },
   "remotes": [

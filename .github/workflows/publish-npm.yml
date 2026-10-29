@@ -1,24 +1,5 @@
 name: Publish fahali-mcp to npm
 
-# Secret-free publishing via npm Trusted Publishing (OIDC, npm >= 11.5).
-# No NPM_TOKEN stored: GitHub mints a short-lived OIDC token that npm trusts,
-# and the publish is provenance-signed. Nothing to leak or rotate.
-#
-# ONE-TIME SETUP (no secret):
-#   npmjs.com -> the `fahali-mcp` package -> Settings -> Trusted Publisher ->
-#   add GitHub Actions:
-#     Organization/User: Future-Legends-Inc
-#     Repository:        fahali-mcp
-#     Workflow:          publish-npm.yml
-#     Environment:       (leave blank)
-#   Note: npm requires the package to EXIST before a trusted publisher can be
-#   attached. For the very first publish of this new name, do ONE manual
-#   `npm publish` (npm login in your own terminal), then configure the trusted
-#   publisher above so every later release is token-free.
-#
-# THEN publish by cutting a GitHub Release (or run this workflow manually).
-# Bump package.json version first — npm rejects re-publishing a version.
-
 on:
   release:
     types: [published]
@@ -28,7 +9,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # OIDC trusted publishing; no NPM_TOKEN needed
+      id-token: write   # OIDC trusted publishing
       contents: read
     steps:
       - uses: actions/checkout@v4
@@ -38,9 +19,18 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Ensure npm supports trusted publishing
         run: npm install -g npm@latest
-      - name: Install + build
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm ci
-          npm run build
-      - name: Publish (provenance, OIDC)
-        run: npm publish --provenance --access public
+          if [ -n "$NODE_AUTH_TOKEN" ]; then
+            echo "Publishing via NPM_TOKEN secret..."
+            npm publish --access public
+          else
+            echo "Publishing via npm Trusted Publishing OIDC (provenance)..."
+            npm publish --provenance --access public
+          fi

@@ -1,0 +1,126 @@
+{
+  "_provenance": {
+    "produced_by": "server/lib/engineBoard.ts readEngineBoard, from server/tests/fixtures/leadTimeEnvelope.engineOne.json (see its _provenance); not a production capture. Pinned by server/tests/engineBoard.test.ts.",
+    "computed_from_captured_rows": [
+      {
+        "path": "withheldOnly",
+        "source": "the captured envelope as loaded (captured rows only)"
+      }
+    ],
+    "derived_rows": [
+      {
+        "path": "publishable",
+        "derived_from": "leadTimeEnvelope.engineOne.json derived.trackRecord[0]",
+        "derived_from_path": "derived.trackRecord[0]",
+        "reason": "production had no publishable fall_warning_8h row at capture time"
+      }
+    ]
+  },
+  "withheldOnly": {
+    "strata": {
+      "value": [
+        {
+          "stratum": "fall_warning_8h \u00b7 8h \u00b7 crypto",
+          "engine": "fall_warning_8h",
+          "horizon_tier": "8h",
+          "bar_regime": "crypto",
+          "precision_pct": null,
+          "base_rate_pct": null,
+          "recall_pct": 0,
+          "quiet_alert_rate_pct": 0,
+          "quiet_windows": 283694,
+          "base_kind": null,
+          "warned_events": 0,
+          "lead_median_hours": null,
+          "claim_family": null,
+          "reason": "no measurable crypto evidence for fall_warning_8h: none of the three gates could measure it \u2014 no non-directional population for the magnitude gate, not enough adverse directional calls at a single judge floor for the directional gate, and no event-probability population for the event gate",
+          "verdict": {
+            "grade": "not_measured",
+            "label": "Not measured",
+            "probabilityOfSkill": null,
+            "reason": "no judged calls in this stratum yet \u2014 there is nothing to grade, which is not the same as a chance-level result"
+          },
+          "publishable": false,
+          "withheld_reason": "no measurable crypto evidence for fall_warning_8h: none of the three gates could measure it \u2014 no non-directional population for the magnitude gate, not enough adverse directional calls at a single judge floor for the directional gate, and no event-probability population for the event gate",
+          "identity_population": "verified_only",
+          "effective_sample": 0,
+          "day": "2026-10-12T11:08:53.330Z"
+        }
+      ]
+    },
+    "grade": {
+      "value": null,
+      "reason": "no_verification_cache"
+    },
+    "withheldOnly": true
+  },
+  "publishable": {
+    "strata": {
+      "value": [
+        {
+          "day": "2026-10-12T00:00:00.000Z",
+          "engine": "fall_warning_8h",
+          "horizon_tier": "8h",
+          "bar_regime": "crypto",
+          "qualifying_events": 1179,
+          "warned_events": 2,
+          "recall_pct": 0.17,
+          "lead_p25_hours": 0.09,
+          "lead_median_hours": 5.83,
+          "lead_p75_hours": 5.83,
+          "effective_sample": 218,
+          "precision_pct": 58.05,
+          "base_rate_pct": 50.93,
+          "publishable": true,
+          "methodology_version": "v9-early-onset-warnings-only-2026-10-10",
+          "computed_at": "2026-10-12T11:08:53.330Z",
+          "claim_family": "directional",
+          "identity_population": "verified_only",
+          "quiet_windows": 117288,
+          "quiet_warned": 254,
+          "quiet_alert_rate_pct": 0.22,
+          "events_from": "2026-09-01T06:43:08.754Z",
+          "base_kind": null,
+          "verdict": {
+            "grade": "beats_chance",
+            "label": "Beats chance",
+            "probabilityOfSkill": 0.9822894451299381,
+            "reason": "58.1% of 218 warnings came true, against a 50.9% base rate for the same instruments and horizon. Beats chance (probability the edge is real: 0.98)."
+          }
+        },
+        {
+          "stratum": "fall_warning_8h \u00b7 8h \u00b7 crypto",
+          "engine": "fall_warning_8h",
+          "horizon_tier": "8h",
+          "bar_regime": "crypto",
+          "precision_pct": null,
+          "base_rate_pct": null,
+          "recall_pct": 0,
+          "quiet_alert_rate_pct": 0,
+          "quiet_windows": 283694,
+          "base_kind": null,
+          "warned_events": 0,
+          "lead_median_hours": null,
+          "claim_family": null,
+          "reason": "no measurable crypto evidence for fall_warning_8h: none of the three gates could measure it \u2014 no non-directional population for the magnitude gate, not enough adverse directional calls at a single judge floor for the directional gate, and no event-probability population for the event gate",
+          "verdict": {
+            "grade": "not_measured",
+            "label": "Not measured",
+            "probabilityOfSkill": null,
+            "reason": "no judged calls in this stratum yet \u2014 there is nothing to grade, which is not the same as a chance-level result"
+          },
+          "publishable": false,
+          "withheld_reason": "no measurable crypto evidence for fall_warning_8h: none of the three gates could measure it \u2014 no non-directional population for the magnitude gate, not enough adverse directional calls at a single judge floor for the directional gate, and no event-probability population for the event gate",
+          "identity_population": "verified_only",
+          "effective_sample": 0,
+          "day": "2026-10-12T11:08:53.330Z"
+        }
+      ]
+    },
+    "grade": {
+      "value": null,
+      "reason": "no_verification_cache"
+    },
+    "withheldOnly": false
+  }
+}

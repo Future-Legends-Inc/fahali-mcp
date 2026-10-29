@@ -1,27 +1,31 @@
 /**
- * API-key auth for the Fahali MCP server.
+ * Auth for the Fahali MCP server.
+ *
+ * Supports two authentication modes:
+ *   1. Static API keys (sk_live_...) — forwarded to upstream /agent/*
+ *   2. OAuth 2.1 access tokens (fahali_oat_...) — verified by OAuthProvider
  *
  * The MCP server itself does not enforce tier checks — it forwards the
- * caller's API key as `Authorization: Bearer <key>` to the upstream Express
- * /agent/* endpoints. The Express server's existing requireAuth + requireTier
- * middleware does the actual enforcement. This keeps tier logic in one place.
+ * caller's credentials to the upstream Express /agent/* endpoints which do.
  *
- * Three sources of the key, in order of precedence:
+ * Key sources, in order of precedence:
  *   1. Per-connection: Authorization: Bearer header on the SSE handshake
- *      (request to GET /sse). Captured in a closure for that session's
- *      Server instance — never shared across sessions.
- *   2. Per-connection: ?api_key=... query param on SSE handshake (for
- *      clients that can't set headers — Claude Desktop ext on some platforms).
- *   3. Process-wide: FAHALI_API_KEY env var (SPECTRA_API_KEY accepted as legacy alias) (stdio mode, single-tenant SSE).
- *
- * If none of the above is set, the MCP server returns a structured error
- * to the MCP client on the first tool call. Tools never silently fail with
- * "anonymous → defaults to retail" semantics.
+ *   2. Legacy SSE only: ?api_key=... query param (accepted for compatibility;
+ *      never recommended because URLs are routinely logged)
+ *   3. Process-wide: FAHALI_API_KEY env var (stdio mode)
  */
 
 import type { IncomingMessage } from "node:http";
 
 export const PROCESS_KEY = (process.env.FAHALI_API_KEY || process.env.SPECTRA_API_KEY)?.trim() || undefined;
+
+/** Header-only credential extraction for the modern Streamable HTTP transport. */
+export function extractAuthorizationCredential(req: IncomingMessage): string | undefined {
+  const auth = req.headers["authorization"];
+  if (typeof auth !== "string") return undefined;
+  const match = auth.match(/^Bearer\s+(.+)$/i);
+  return match?.[1]?.trim() || undefined;
+}
 
 /**
  * Extract an API key from an incoming SSE handshake request.
@@ -31,11 +35,8 @@ export const PROCESS_KEY = (process.env.FAHALI_API_KEY || process.env.SPECTRA_AP
  * Returns undefined if neither is present.
  */
 export function extractKeyFromHandshake(req: IncomingMessage): string | undefined {
-  const auth = req.headers["authorization"];
-  if (typeof auth === "string") {
-    const match = auth.match(/^Bearer\s+(.+)$/i);
-    if (match) return match[1].trim();
-  }
+  const headerCredential = extractAuthorizationCredential(req);
+  if (headerCredential) return headerCredential;
 
   const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
   const keyParam = url.searchParams.get("api_key");
@@ -66,7 +67,7 @@ export const MISSING_KEY_ERROR = {
         {
           error: "missing_api_key",
           message:
-            "No Fahali API key was provided. Set FAHALI_API_KEY in the MCP server environment, or pass `Authorization: Bearer <key>` on the SSE handshake, or include `?api_key=<key>` in the SSE URL.",
+            "No Fahali API key was provided. Set FAHALI_API_KEY in the local MCP server environment, or pass `Authorization: Bearer <key>` on the hosted handshake.",
           docs: "https://app.fahaliai.com/openapi.json",
         },
         null,

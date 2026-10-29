@@ -72,7 +72,7 @@ const run = async () => {
   }
   line("Flash-crash precursor", flashRead);
 
-  // 3. Judged read + confidence + missing inputs + signed receipt.
+  // 3. Judged read + confidence + missing inputs + receipt hash.
   const verdict = await get(`/agent/verdict?symbol=${SYMBOL}`, true);
   let conf = null;
   let missing = [];
