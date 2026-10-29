@@ -51,7 +51,7 @@ It forwards each tool call to the upstream Fahali API; tier is enforced upstream
 
 ## Tools
 
-Around 30 tools. Most are read-only market intelligence; a few agent-workspace tools (memory, custom alerts) write only to your own workspace, never to markets. Highlights:
+The hosted server at mcp.fahaliai.com exposes more than 50 tools (the local stdio proxy in this repo carries a subset). Most are read-only market intelligence; a few agent-workspace tools (memory, custom alerts) write only to your own workspace, never to markets. Highlights:
 
 | Tool | Returns |
 |------|---------|
